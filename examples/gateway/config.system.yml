@@ -1,0 +1,35 @@
+# Gateway System Configuration
+# This file contains system-level configuration for gateway mode
+
+# Logging configuration
+logging:
+  level: INFO
+  file: gateway.log
+  max_size_mb: 10
+  max_files: 5
+
+# System settings
+system:
+  hostname: ${HOSTNAME:-gateway}
+  timezone: ${TZ:-UTC}
+  heartbeat_interval_ms: ${HEARTBEAT_MS:-30000}
+
+# Network settings
+network:
+  discovery_enabled: ${ENABLE_DISCOVERY:-true}
+  discovery_timeout_ms: ${DISCOVERY_TIMEOUT_MS:-10000}
+  connection_retry_attempts: ${RETRY_ATTEMPTS:-3}
+  connection_retry_delay_ms: ${RETRY_DELAY_MS:-5000}
+
+# Performance settings
+performance:
+  max_concurrent_operations: 1
+  sweep_interval_ms: ${SWEEP_MS:-1000}
+  data_buffer_size: 1000
+  memory_limit_mb: 512
+
+# Security settings
+security:
+  tls_enabled: ${BROKER_TLS:-true}
+  certificate_validation: true
+  allowed_ciphers: "TLS_AES_128_GCM_SHA256,TLS_AES_256_GCM_SHA384"

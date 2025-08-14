@@ -1,4 +1,9 @@
-﻿using InfluxDB.Client;
+﻿/*
+// InfluxLP transport commented out for gateway deployment
+// This transport is not needed for MQTT-based gateway deployment
+// Uncomment if InfluxDB integration is required in the future
+
+using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 using l99.driver.@base;
 using Scriban;
@@ -99,58 +104,15 @@ public class InfluxLP : Transport
         }
     }
 
-    private bool HasTransform(string templateName, string transformName = null!)
+    private bool HasTransform(dynamic veneer)
     {
-        if (transformName == null)
-            transformName = templateName;
-
-        // template exists and has been cached
-        if (_templateLookup.ContainsKey(templateName)) return true;
-
-        // transform exists in config, create a template and cache it
-        if (_transformLookup.ContainsKey(transformName))
-        {
-            var transform = _transformLookup[transformName];
-            var template = Template.Parse(transform);
-            if (template.HasErrors) Logger.Error($"[{Machine.Id}] '{templateName}' template transform has errors");
-            _templateLookup.Add(templateName, template);
-            return true;
-        }
-
-        return false;
+        return _templateLookup.ContainsKey(veneer.Name);
     }
 
-    private bool HasTransform(Veneer veneer)
+    public override async Task OnGenerateIntermediateModelAsync(dynamic model)
     {
-        return HasTransform(veneer.Name,
-            $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}");
+        // TODO: implement
+        await Task.FromResult(0);
     }
 }
-
-/*
-
-from(bucket: "fanuc")
-  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-  |> filter(fn: (r) => r["_measurement"] == "gcode")
-  |> map(fn: (r) => ({r with _value: string(v: r._value)}))
-  |> group(columns: ["machine", "path", "_measurement", "_time"])
-  |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
-  |> group()
-  |> drop(columns: ["_measurement"])
-  |> yield()
-
-from(bucket: "fanuc")
-  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-  |> filter(fn: (r) => r["_measurement"] == "state")
-  |> filter(fn: (r) => r["_field"] == "execution")
-  |> stateDuration(
-    fn: (r) => r._value == "READY",
-    column: "ready_duration",
-    unit: 1s)
-  |> stateDuration(
-    fn: (r) => r._value == "ACTIVE",
-    column: "active_duration",
-    unit: 1s)
-  |> yield()
-  
 */

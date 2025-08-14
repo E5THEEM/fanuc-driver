@@ -1,4 +1,9 @@
-﻿using l99.driver.@base;
+﻿/*
+// Null transport commented out for gateway deployment
+// This transport is not needed for production deployment
+// Uncomment if testing/debugging transport is required in the future
+
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.transports;
@@ -53,3 +58,4 @@ public class Null : Transport
         await Task.FromResult(0);
     }
 }
+*/

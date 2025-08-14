@@ -1,0 +1,80 @@
+# Gateway Machine Configuration Template
+# This configuration is optimized for single-machine gateway deployment
+# Environment variables can override any of these settings
+
+machine:
+  id: ${MACHINE_ID:-auto-generated}
+  enabled: true
+  type: l99.driver.fanuc.FanucMachine, fanuc
+  strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
+  handler: l99.driver.fanuc.handlers.FanucOne, fanuc
+  transport: l99.driver.fanuc.transports.MQTT, fanuc
+
+# Machine instance configuration
+l99.driver.fanuc.FanucMachine, fanuc:
+  sweep_ms: ${SWEEP_MS:-1000}
+  net:
+    ip: ${CNC_IP:-auto-discover}
+    port: ${CNC_PORT:-8193}
+    timeout_s: ${CNC_TIMEOUT:-3}
+
+# Strategy configuration
+l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+  stay_connected: true
+  collectors:
+    - l99.driver.fanuc.collectors.MachineInfo, fanuc
+    - l99.driver.fanuc.collectors.StateData, fanuc
+    - l99.driver.fanuc.collectors.ProductionData, fanuc
+    - l99.driver.fanuc.collectors.Alarms, fanuc
+
+# Handler configuration
+l99.driver.fanuc.handlers.FanucOne, fanuc:
+  iso8601: true
+  change_only: true
+  skip_internal: true
+
+# MQTT transport configuration
+l99.driver.fanuc.transports.MQTT, fanuc:
+  publish_model: false
+  topic: fanuc/${MACHINE_ID:-auto-generated}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}
+  net:
+    type: tcp
+    ip: ${BROKER_IP:-broker.company.com}
+    port: ${BROKER_PORT:-1883}
+  anonymous: false
+  user: ${BROKER_USER:-gateway_user}
+  password: ${BROKER_PASSWORD:-secure_password}
+  tls_enabled: ${BROKER_TLS:-true}
+
+# Discovery configuration
+discovery:
+  enabled: ${ENABLE_DISCOVERY:-true}
+  timeout_ms: ${DISCOVERY_TIMEOUT_MS:-10000}
+  strategies:
+    - common_ips
+    - smart_subnet_scan
+    - full_subnet_scan
+
+# Collector-specific configurations
+l99.driver.fanuc.collectors.Alarms, fanuc:
+  stateful: true
+
+l99.driver.fanuc.collectors.Messages, fanuc:
+  stateful: true
+
+l99.driver.fanuc.collectors.ProductionData, fanuc:
+  unsupported: false
+
+# Environment Variables Reference:
+# MACHINE_ID: Unique identifier for this machine
+# CNC_IP: IP address of the CNC machine (use 'auto-discover' for automatic discovery)
+# CNC_PORT: FOCAS port (default: 8193)
+# CNC_TIMEOUT: Connection timeout in seconds (default: 3)
+# SWEEP_MS: Data collection interval in milliseconds (default: 1000)
+# BROKER_IP: MQTT broker IP address
+# BROKER_PORT: MQTT broker port (default: 1883)
+# BROKER_USER: MQTT username
+# BROKER_PASSWORD: MQTT password
+# BROKER_TLS: Enable TLS encryption (default: true)
+# ENABLE_DISCOVERY: Enable automatic CNC discovery (default: true)
+# DISCOVERY_TIMEOUT_MS: Discovery timeout in milliseconds (default: 10000)

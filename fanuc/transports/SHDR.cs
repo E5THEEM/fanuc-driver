@@ -1,4 +1,9 @@
-﻿using l99.driver.@base;
+﻿/*
+// SHDR transport commented out for gateway deployment
+// This transport is not needed for MQTT-based gateway deployment
+// Uncomment if MTConnect SHDR integration is required in the future
+
+using l99.driver.@base;
 using l99.driver.fanuc.utils;
 using MTConnect.Adapters;
 using MTConnect.Observations;
@@ -521,3 +526,4 @@ public class SHDR : Transport
         public int Port;
     }
 }
+*/

@@ -1,0 +1,30 @@
+# Gateway User Configuration
+# This file contains user-specific configuration overrides for gateway mode
+# Environment variables can override any of these settings
+
+# User preferences
+user:
+  company: ${COMPANY_NAME:-Company}
+  site: ${SITE_NAME:-Site}
+  department: ${DEPARTMENT:-Production}
+  contact: ${CONTACT_EMAIL:-admin@company.com}
+
+# Custom settings
+custom:
+  machine_naming: ${MACHINE_NAMING:-auto}
+  data_retention_days: ${DATA_RETENTION_DAYS:-30}
+  backup_enabled: ${BACKUP_ENABLED:-true}
+  backup_interval_hours: ${BACKUP_INTERVAL_HOURS:-24}
+
+# Optional features
+features:
+  health_monitoring: ${HEALTH_MONITORING:-true}
+  remote_access: ${REMOTE_ACCESS:-false}
+  data_compression: ${DATA_COMPRESSION:-true}
+  local_storage: ${LOCAL_STORAGE:-false}
+
+# Integration settings
+integrations:
+  webhook_url: ${WEBHOOK_URL:-}
+  api_key: ${API_KEY:-}
+  external_system: ${EXTERNAL_SYSTEM:-}

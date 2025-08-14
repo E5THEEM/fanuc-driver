@@ -1,4 +1,9 @@
-﻿using l99.driver.@base;
+﻿/*
+// Sparkplug B transport commented out for gateway deployment
+// This transport is not needed for MQTT-based gateway deployment
+// Uncomment if Sparkplug B integration is required in the future
+
+using l99.driver.@base;
 using l99.driver.fanuc.utils;
 using SparkplugNet.Core.Node;
 using SparkplugNet.VersionB;
@@ -352,3 +357,4 @@ public class SpB : Transport
         MustRebirth
     }
 }
+*/
